@@ -13,3 +13,7 @@ price to pay as I learn the ways of modern web development.
 *- The road over water*
 *Wednesday, October 11, 2017*
 > Gregor
+
+**How to use this program**
+Access the link below. Type a minimum value, a mximum value, and press the most engaging button on the page.
+https://pschmied.github.io/do-some-things-in-js/
