@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Javascript Calisthenics</title>
+    <!-- page styling -->
+    <style type="text/css">
+        .titleHolder {
+            text-align: center;
+        }
+        button {
+            border: none;
+            margin-bottom: 10px;
+        }
+        h1 {
+            margin: 0;
+            font-family: sans-serif;
+        }
+        .result {
+            color: green;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript">
+//Create a javascript collection (or generating function) that contains all integers in the range 0-99999.
+//Create a function that will, when given the input created above, return the sum of all odd integers in the collection.
+
+// wait till document is fully laoded
+document.addEventListener('DOMContentLoaded', function(event) {
+
+  // Sum all odd integers in the given range
+  function oddInts(start,end,debug) {
+    var sum = 0; // empty total
+    start = Number(start);
+    end = Number(end);
+    for (var i = start; i <= end; i++) { // use given start range, iterate until given end range
+        if (debug) { // if debug variable was passed
+                console.log('Current value:' + i); // print each result
+            }
+        if (i % 2 == 1) { // if there's a remainder
+            sum = sum + Number(i); // add to existing sum. Make sure it's a number
+            if (debug) { // if debug variable was passed
+                console.log('It\'s an odd number.  Now adding it.'); // print each result
+            }
+        }
+    }
+    var message = 'Your grand sum is ' + sum + '. 🎉';
+    console.log(message); // show grand total in console
+    document.querySelector('.result').innerHTML = message; // show grand total on page
+  } 
+  /* 
+  hard coded test
+  var sum = 0;
+    for (var i = 0; i < 6; i++) {
+        if (i % 2 == 1) {
+            sum = sum + i;
+        }
+    }console.log(sum+' sum is that')
+  */    
+ 
+  document.querySelector('.calculate').addEventListener('click', function(event){
+    var start = document.querySelector('.start').value;
+    console.log('start value is ' + start);
+    var end = document.querySelector('.end').value;
+    console.log('end value is ' + end);
+    var debug = null;
+    if (document.querySelector('.debug').checked) {
+      debug = document.querySelector('.start').value;
+      console.log('We are in debug mode now.');
+    } else {console.log('we are not in debug mode.');}
+    oddInts(start,end,debug);
+    console.log('You clicked Engage!');
+  });
+
+});
+</script>
+<div class="titleHolder">
+    <h1>Super Number Cruncher</h1>
+    <span>Set a number range and the system will add all the odd values</span>
+</div>
+<div>
+    <label>Start value</label>
+    <input type="number" name="start" class="start" min="0" max="999999">
+</div>
+<div>
+    <label>End value</label>
+    <input type="number" name="end" class="end" min="0" max="999999">
+</div>
+<div>
+    <input type="checkbox" name="debug" class="debug" id="debug"> <label for="debug">Debug mode</label>
+</div>
+<button class="calculate">Engage!</button>
+<div class="result"></div>
+
+</body>
+</html>
