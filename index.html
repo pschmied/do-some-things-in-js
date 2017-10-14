@@ -19,6 +19,40 @@
             color: green;
             font-family: sans-serif;
         }
+        .testResults {
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 1em;
+            border-radius: 0em 1em 1em 0em;
+            margin-left: -1em;
+            display: none;
+        }
+        .show {
+            display: inline-block;
+        }
+        .testItem {
+            margin-right: 1em;
+            display: inline-block;
+            max-width: 9rem;
+            overflow: auto;
+            vertical-align: top;
+        }
+        .testBox {
+            position: absolute;
+            bottom: 0;
+        }
+        .testName {
+            color: rgba(255, 215, 0, 0.42);
+            font-size: smaller;
+            text-transform: capitalize;
+        }
+        .testResult div {
+            background: white;
+            overflow: auto;
+            height: 2rem;
+            color: green;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
@@ -35,44 +69,59 @@ document.addEventListener('DOMContentLoaded', function(event) {
     start = Number(start);
     end = Number(end);
     for (var i = start; i <= end; i++) { // use given start range, iterate until given end range
+      if (debug) { // if debug variable was passed
+        console.log('Current value:' + i); // print each result
+      }
+      if (i % 2 == 1) { // if there's a remainder
+        sum = sum + Number(i); // add to existing sum. Make sure it's a number
         if (debug) { // if debug variable was passed
-                console.log('Current value:' + i); // print each result
-            }
-        if (i % 2 == 1) { // if there's a remainder
-            sum = sum + Number(i); // add to existing sum. Make sure it's a number
-            if (debug) { // if debug variable was passed
-                console.log('It\'s an odd number.  Now adding it.'); // print each result
-            }
+          console.log('It\'s an odd number.  Now adding it.'); // print each result
         }
+      }
     }
     var message = 'Your grand sum is ' + sum + '. 🎉';
     console.log(message); // show grand total in console
     document.querySelector('.result').innerHTML = message; // show grand total on page
-  } 
-  /* 
-  hard coded test
-  var sum = 0;
-    for (var i = 0; i < 6; i++) {
-        if (i % 2 == 1) {
-            sum = sum + i;
-        }
-    }console.log(sum+' sum is that')
-  */    
- 
+    return message;
+  }
+
   document.querySelector('.calculate').addEventListener('click', function(event){
     var start = document.querySelector('.start').value;
     console.log('start value is ' + start);
     var end = document.querySelector('.end').value;
     console.log('end value is ' + end);
     var debug = null;
-    if (document.querySelector('.debug').checked) {
+    if (document.querySelector('.debug').checked) { // if debugged checkbox is enabled
       debug = document.querySelector('.start').value;
       console.log('We are in debug mode now.');
     } else {console.log('we are not in debug mode.');}
     oddInts(start,end,debug);
     console.log('You clicked Engage!');
   });
+  document.querySelector('#tests').addEventListener('click', function(){
+    document.querySelector('.testResults').classList.toggle('show');
+    if (document.querySelector('#tests').checked) {
+      activateTests();
+    }
+  }); // end tests event listener
 
+  // start tests
+  function activateTests() {
+    //document.querySelector('#invertedRange .testResult div').innerHTML = oddInts('5000','300','debug');
+    // write for each loop to go through each .testItem
+    // grab start value and end value. Save each into a variable
+    // send the variables into oddInts along with debug command
+    var totalTests = document.querySelectorAll('.testItem');
+    console.log(totalTests, 'content of total tests');
+    console.log(totalTests.length,'length of total tests');
+    for (var i = 0; i < totalTests.length; i++) {
+      console.log(totalTests[i].querySelector('.startValue span').innerText);
+      var startVar = totalTests[i].querySelector('.startValue span').innerText;
+      var endVar = totalTests[i].querySelector('.endValue span').innerText;
+      totalTests[i].querySelector('.testResult div').innerText = oddInts(startVar, endVar, debug);
+    }
+
+  }
 });
 </script>
 <div class="titleHolder">
@@ -92,6 +141,34 @@ document.addEventListener('DOMContentLoaded', function(event) {
 </div>
 <button class="calculate">Engage!</button>
 <div class="result"></div>
-
+<div class="testBox">
+    <div><input type="checkbox" class="tests" id="tests"> <label for="tests">Show Tests</label></div>
+      <div class="testResults">
+          <div class="testItem" id="invertedRange">
+            <div class="testName">inverted range</div><div class="startValue">Start Value: <span>9000</span></div><div class="endValue">End Value: <span>500</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+          </div>
+          <div class="testItem" id="negativeStart">
+            <div class="testName">negative start</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+          </div>
+          <div class="testItem" id="bothNegative">
+            <div class="testName">both ends negative</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+          </div>
+          <div class="testItem" id="nonNumbers">
+            <div class="testName">non-number input</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+          </div>
+          <div class="testItem" id="largeEnd">
+            <div class="testName">Super large end value</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+          </div>
+          <div class="testItem" id="fractions">
+            <div class="testName">Fractional numbers</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+          </div>
+          <div class="testItem" id="">
+            <div class="testName">NAME HERE</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+          </div>
+          <div class="testItem" id="">
+            <div class="testName">NAME HERE</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+          </div>
+      </div>
+</div>
 </body>
 </html>
