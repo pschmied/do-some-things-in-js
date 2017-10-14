@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
         }
       }
     }
+    sum = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); //make pretty with commas. Thanks Stackoverflow.
     var message = 'Your grand sum is ' + sum + '. 🎉';
     console.log(message); // show grand total in console
     document.querySelector('.result').innerHTML = message; // show grand total on page
@@ -118,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
       console.log(totalTests[i].querySelector('.startValue span').innerText);
       var startVar = totalTests[i].querySelector('.startValue span').innerText;
       var endVar = totalTests[i].querySelector('.endValue span').innerText;
-      totalTests[i].querySelector('.testResult div').innerText = oddInts(startVar, endVar, debug);
+      totalTests[i].querySelector('.testResult div').innerText = oddInts(startVar, endVar);
     }
 
   }
@@ -148,25 +149,19 @@ document.addEventListener('DOMContentLoaded', function(event) {
             <div class="testName">inverted range</div><div class="startValue">Start Value: <span>9000</span></div><div class="endValue">End Value: <span>500</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
           </div>
           <div class="testItem" id="negativeStart">
-            <div class="testName">negative start</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+            <div class="testName">negative start</div><div class="startValue">Start Value: <span>-400</span></div><div class="endValue">End Value: <span>69</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
           </div>
           <div class="testItem" id="bothNegative">
-            <div class="testName">both ends negative</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+            <div class="testName">both ends negative</div><div class="startValue">Start Value: <span>-400</span></div><div class="endValue">End Value: <span>-205</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
           </div>
           <div class="testItem" id="nonNumbers">
             <div class="testName">non-number input</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
           </div>
           <div class="testItem" id="largeEnd">
-            <div class="testName">Super large end value</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+            <div class="testName">Super large end value</div><div class="startValue">Start Value: <span>16</span></div><div class="endValue">End Value: <span>1075408</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
           </div>
           <div class="testItem" id="fractions">
-            <div class="testName">Fractional numbers</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
-          </div>
-          <div class="testItem" id="">
-            <div class="testName">NAME HERE</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
-          </div>
-          <div class="testItem" id="">
-            <div class="testName">NAME HERE</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+            <div class="testName">Fractional numbers</div><div class="startValue">Start Value: <span>0.764</span></div><div class="endValue">End Value: <span>579.11374</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
           </div>
       </div>
 </div>
