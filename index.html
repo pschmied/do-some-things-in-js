@@ -4,16 +4,31 @@
     <title>Javascript Calisthenics</title>
     <!-- page styling -->
     <style type="text/css">
+        body {
+            background: #d7e1e2;
+        }
         .titleHolder {
             text-align: center;
         }
         button {
             border: none;
             margin-bottom: 10px;
+            padding: .5rem 1.5rem;
+            font-weight: bold;
+            background: darkseagreen;
+        }
+        button:hover {
+            cursor: pointer;
+            background-color: #7ba07b;
         }
         h1 {
             margin: 0;
             font-family: sans-serif;
+        }
+        .container {
+            max-width: 14rem;
+            margin: 5rem auto;
+            text-align: center;
         }
         .result {
             color: green;
@@ -53,21 +68,52 @@
             color: green;
             font-family: monospace;
         }
+        .error {
+            background: red;
+        }
+        .failCount {
+            text-align: center;
+            margin-bottom: -1rem;
+            color: aquamarine;
+            text-transform: uppercase;
+        }
+        .fieldset {
+            width: 9rem;
+            margin: auto;
+        }
+        .fieldset label {vertical-align: middle;}
+        .fieldset input {
+            float: right;
+            line-height: 1.2rem;
+        }
+        .row {
+            clear: both;
+            min-height: 1.5rem;
+            margin-bottom: .5rem;
+        }
+        .debug {    
+            font-size: .8rem;
+            color: rgba(0, 0, 0, 0.72);
+        }
+        .showTests {line-height: 3rem;}
+        .uiResults {display: none};
     </style>
 </head>
 <body>
 <script type="text/javascript">
-//Create a javascript collection (or generating function) that contains all integers in the range 0-99999.
-//Create a function that will, when given the input created above, return the sum of all odd integers in the collection.
+/* 
+Task: Create a javascript collection (or generating function) that contains all integers in the range 0-99999.
+Create a function that will, when given the input created above, return the sum of all odd integers in the collection.
+*/
 
-// wait till document is fully laoded
+// wait till document is fully laoded before doing anything
 document.addEventListener('DOMContentLoaded', function(event) {
 
-  // Sum all odd integers in the given range
+  // Sum all odd integers in the given range. This is the actual objective.
   function oddInts(start,end,debug) {
     var sum = 0; // empty total
-    start = Number(start);
-    end = Number(end);
+    start = Number(start); // turn string into number
+    end = Number(end); // tunr string into number
     for (var i = start; i <= end; i++) { // use given start range, iterate until given end range
       if (debug) { // if debug variable was passed
         console.log('Current value:' + i); // print each result
@@ -79,11 +125,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
         }
       }
     }
-    sum = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); //make pretty with commas. Thanks Stackoverflow.
-    var message = 'Your grand sum is ' + sum + '. 🎉';
+    var sumPretty = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); //make pretty with commas. Thanks Stackoverflow.
+    var message = 'Your grand sum is ' + sumPretty + '. 🎉';
     console.log(message); // show grand total in console
     document.querySelector('.result').innerHTML = message; // show grand total on page
-    return message;
+    return [message, sum]; // return function only used in tests. Array contains message and raw value
   }
 
   document.querySelector('.calculate').addEventListener('click', function(event){
@@ -99,28 +145,48 @@ document.addEventListener('DOMContentLoaded', function(event) {
     oddInts(start,end,debug);
     console.log('You clicked Engage!');
   });
+  // event listener for tests checkbox
   document.querySelector('#tests').addEventListener('click', function(){
-    document.querySelector('.testResults').classList.toggle('show');
-    if (document.querySelector('#tests').checked) {
-      activateTests();
+    document.querySelector('.testResults').classList.toggle('show'); // toggle visibility of test element
+    if (document.querySelector('#tests').checked) { // if checkbox is enabled
+      activateTests(); // run test function
     }
   }); // end tests event listener
 
   // start tests
   function activateTests() {
-    //document.querySelector('#invertedRange .testResult div').innerHTML = oddInts('5000','300','debug');
-    // write for each loop to go through each .testItem
-    // grab start value and end value. Save each into a variable
-    // send the variables into oddInts along with debug command
-    var totalTests = document.querySelectorAll('.testItem');
+    var totalTests = document.querySelectorAll('.testItem'); // DOM element of all tests
     console.log(totalTests, 'content of total tests');
     console.log(totalTests.length,'length of total tests');
+    var failCount = 0; // will track failed test results
+    // iterate through each test block, runs the test and report result & total failures
     for (var i = 0; i < totalTests.length; i++) {
-      console.log(totalTests[i].querySelector('.startValue span').innerText);
-      var startVar = totalTests[i].querySelector('.startValue span').innerText;
-      var endVar = totalTests[i].querySelector('.endValue span').innerText;
-      totalTests[i].querySelector('.testResult div').innerText = oddInts(startVar, endVar);
+      var startVar = totalTests[i].querySelector('.startValue span').innerText; // hold start number
+      var endVar = totalTests[i].querySelector('.endValue span').innerText; // hold end number
+      var testResults = oddInts(startVar, endVar); // send composite into the oddInts function, bypassing the UI
+      console.log(testResults , 'contents of testResults');
+      console.log('Is this a number?',(Number.isInteger(testResults[1])));
+      totalTests[i].querySelector('.testResult div').innerText = testResults[0]; // Place test results in textbox for display
+
+      // Failed attempt to emulate input results through UI fields. It would be useeful because some of the tests wouldn't ever be allowed to run due to native browser field validation
+      /*
+      var UIstart = document.querySelector('.start').value = startVar; // try and input start value into UI
+      var UIend = document.querySelector('.end').value = endVar; // try and input end value into UI
+      totalTests[i].querySelector('.uiResults div').innerHTML = 'Start: ' + UIstart + '<br> End: ' + UIend ; // Place test results in textbox for display
+      */
+
+      // if number is not an integer      
+      if (!(Number.isInteger(testResults[1]))) {
+        var testFail = totalTests[i].querySelector('.testResult').classList.add('error'); // mark the box as an error
+        console.log('this is not an integer' + testResults[1]);
+        failCount++; // add to failcount
+      }
+    } // end totalTests for loop
+    // if there are no failures, celebrate success
+    if (failCount == 0) {
+      failCount = failCount + ' 🎉';
     }
+    document.querySelector('.failCount').innerHTML = 'Total Failures: ' + failCount + '</div>'; // show the people you're good at your job
 
   }
 });
@@ -129,40 +195,44 @@ document.addEventListener('DOMContentLoaded', function(event) {
     <h1>Super Number Cruncher</h1>
     <span>Set a number range and the system will add all the odd values</span>
 </div>
-<div>
-    <label>Start value</label>
-    <input type="number" name="start" class="start" min="0" max="999999">
+<div class="container">
+    <div class="fieldset row">
+        <label>Start value</label>
+        <input type="number" name="start" class="start" min="0" max="999999">
+    </div>
+    <div class="fieldset row">
+        <label>End value</label>
+        <input type="number" name="end" class="end" min="0" max="999999">
+    </div>
+    <div class="row debug">
+        <input type="checkbox" name="debug" class="debug" id="debug"> <label for="debug">Debug mode</label>
+    </div>
+    <button class="calculate">Engage!</button>
+    <div class="result"></div>
 </div>
-<div>
-    <label>End value</label>
-    <input type="number" name="end" class="end" min="0" max="999999">
-</div>
-<div>
-    <input type="checkbox" name="debug" class="debug" id="debug"> <label for="debug">Debug mode</label>
-</div>
-<button class="calculate">Engage!</button>
-<div class="result"></div>
+
 <div class="testBox">
-    <div><input type="checkbox" class="tests" id="tests"> <label for="tests">Show Tests</label></div>
+    <div class="showTests"><input type="checkbox" class="tests" id="tests"> <label for="tests">Show Tests</label></div>
       <div class="testResults">
           <div class="testItem" id="invertedRange">
-            <div class="testName">inverted range</div><div class="startValue">Start Value: <span>9000</span></div><div class="endValue">End Value: <span>500</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+            <div class="testName">inverted range</div><div class="startValue">Start Value: <span>9000</span></div><div class="endValue">End Value: <span>500</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div><div class="uiResults">UI Response: <div>Baby, I got a plan; run away as fast as you can.</div></div>
           </div>
           <div class="testItem" id="negativeStart">
-            <div class="testName">negative start</div><div class="startValue">Start Value: <span>-400</span></div><div class="endValue">End Value: <span>69</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+            <div class="testName">negative start</div><div class="startValue">Start Value: <span>-400</span></div><div class="endValue">End Value: <span>69</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div><div class="uiResults">UI Response: <div>Baby, I got a plan; run away as fast as you can.</div></div>
           </div>
           <div class="testItem" id="bothNegative">
-            <div class="testName">both ends negative</div><div class="startValue">Start Value: <span>-400</span></div><div class="endValue">End Value: <span>-205</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+            <div class="testName">both ends negative</div><div class="startValue">Start Value: <span>-400</span></div><div class="endValue">End Value: <span>-205</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div><div class="uiResults">UI Response: <div>Baby, I got a plan; run away as fast as you can.</div></div>
           </div>
           <div class="testItem" id="nonNumbers">
-            <div class="testName">non-number input</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+            <div class="testName">non-number input</div><div class="startValue">Start Value: <span>###</span></div><div class="endValue">End Value: <span>###</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div><div class="uiResults">UI Response: <div>Baby, I got a plan; run away as fast as you can.</div></div>
           </div>
           <div class="testItem" id="largeEnd">
-            <div class="testName">Super large end value</div><div class="startValue">Start Value: <span>16</span></div><div class="endValue">End Value: <span>1075408</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+            <div class="testName">Super large end value</div><div class="startValue">Start Value: <span>16</span></div><div class="endValue">End Value: <span>1075408</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div><div class="uiResults">UI Response: <div>Baby, I got a plan; run away as fast as you can.</div></div>
           </div>
           <div class="testItem" id="fractions">
-            <div class="testName">Fractional numbers</div><div class="startValue">Start Value: <span>0.764</span></div><div class="endValue">End Value: <span>579.11374</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div>
+            <div class="testName">Fractional numbers</div><div class="startValue">Start Value: <span>0.764</span></div><div class="endValue">End Value: <span>579.11374</span></div><div class="testResult">Results: <div>Tears of love lost in days gone by. Inspiration, look and see. And now my world it smiles. Together we will go until we die. </div></div><div class="uiResults">UI Response: <div>Baby, I got a plan; run away as fast as you can.</div></div>
           </div>
+          <div class="failCount"></div>
       </div>
 </div>
 </body>
